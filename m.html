@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mehrub's Awesome GTM Practice Site</title>
+<title>Mehrub's Awesome 2-Page Site</title>
 
 <style>
-/* Background Gradient */
+/* ===== Global Styles ===== */
 body {
     margin: 0;
     font-family: 'Arial', sans-serif;
@@ -14,14 +14,12 @@ body {
     color: #fff;
 }
 
-/* Container */
 .container {
     max-width: 900px;
     margin: 50px auto;
     text-align: center;
 }
 
-/* Cards */
 .card {
     background: rgba(255,255,255,0.1);
     border-radius: 20px;
@@ -30,11 +28,8 @@ body {
     box-shadow: 0 8px 20px rgba(0,0,0,0.3);
     transition: transform 0.3s;
 }
-.card:hover {
-    transform: scale(1.05);
-}
+.card:hover { transform: scale(1.05); }
 
-/* Buttons */
 button {
     padding: 12px 25px;
     font-size: 18px;
@@ -46,11 +41,8 @@ button {
     margin: 10px;
     transition: 0.3s;
 }
-button:hover {
-    background-color: #f8f9fc;
-}
+button:hover { background-color: #f8f9fc; }
 
-/* Input */
 input {
     padding: 10px;
     width: 250px;
@@ -59,20 +51,34 @@ input {
     margin: 10px;
 }
 
-/* Heading */
-h1, h2 {
-    margin-bottom: 15px;
-    text-shadow: 1px 1px 4px rgba(0,0,0,0.5);
+a {
+    color: #fff;
+    text-decoration: underline;
+}
+
+/* ===== Page Sections ===== */
+.section {
+    display: none;
+}
+
+.active {
+    display: block;
 }
 </style>
-
 </head>
 <body>
 
+<!-- ===== Navigation ===== -->
 <div class="container">
+    <button onclick="showPage('home')">Home</button>
+    <button onclick="showPage('contact')">Contact</button>
+</div>
+
+<!-- ===== Home Section ===== -->
+<div class="container section active" id="home">
     <div class="card">
         <h1>🚀 Welcome to Mehrub's Awesome Site</h1>
-        <p>Interactive practice website for GTM / GA4 tracking</p>
+        <p>Practice GTM & GA4 tracking here!</p>
     </div>
 
     <div class="card">
@@ -80,12 +86,16 @@ h1, h2 {
         <button id="clickBtn">Click Me!</button>
         <p>Total Clicks: <span id="count">0</span></p>
     </div>
+</div>
 
+<!-- ===== Contact Section ===== -->
+<div class="container section" id="contact">
     <div class="card">
-        <h2>📬 Lead Form</h2>
+        <h1>📬 Lead Form</h1>
+        <p>Submit your info below:</p>
         <form id="leadForm">
-            <input type="text" id="name" placeholder="Your Name" required>
-            <br>
+            <input type="text" id="name" placeholder="Your Name" required><br>
+            <input type="email" id="email" placeholder="Your Email" required><br>
             <button type="submit">Submit</button>
         </form>
         <p id="message"></p>
@@ -93,20 +103,27 @@ h1, h2 {
 </div>
 
 <script>
-// Button click counter
+// ===== Page Navigation =====
+function showPage(pageId) {
+    document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
+    document.getElementById(pageId).classList.add('active');
+}
+
+// ===== Button Click Tracker =====
 let count = 0;
 document.getElementById("clickBtn").addEventListener("click", function(){
     count++;
     document.getElementById("count").innerText = count;
-    console.log("Button clicked"); // GTM can track this
+    console.log("Button clicked");
 });
 
-// Form submit
+// ===== Form Submit Tracker =====
 document.getElementById("leadForm").addEventListener("submit", function(e){
     e.preventDefault();
     let name = document.getElementById("name").value;
-    document.getElementById("message").innerText = "Thanks, " + name + "! We'll contact you soon.";
-    console.log("Form submitted"); // GTM can track this
+    let email = document.getElementById("email").value;
+    document.getElementById("message").innerText = "Thanks, " + name + "! We'll contact you at " + email + ".";
+    console.log("Form submitted");
 });
 </script>
 
