@@ -1,139 +1,117 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mehrub's Awesome 2-Page Site</title>
-<!-- Google Tag Manager -->
-<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-PND3KKQL');</script>
-<!-- End Google Tag Manager -->
-<style>
-body {
-    margin: 0;
-    font-family: 'Arial', sans-serif;
-    background: linear-gradient(120deg, #4e73df, #1cc88a);
-    color: #fff;
-}
-
-.container {
-    max-width: 900px;
-    margin: 50px auto;
-    text-align: center;
-}
-
-.card {
-    background: rgba(255,255,255,0.1);
-    border-radius: 20px;
-    padding: 30px;
-    margin: 20px 0;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-    transition: transform 0.3s;
-}
-.card:hover { transform: scale(1.05); }
-
-button {
-    padding: 12px 25px;
-    font-size: 18px;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    background-color: white;
-    color: #4e73df;
-    margin: 10px;
-    transition: 0.3s;
-}
-button:hover { background-color: #f8f9fc; }
-
-input {
-    padding: 10px;
-    width: 250px;
-    border-radius: 5px;
-    border: none;
-    margin: 10px;
-}
-
-a {
-    color: #fff;
-    text-decoration: underline;
-}
-
-/* ===== Page Sections ===== */
-.section {
-    display: none;
-}
-
-.active {
-    display: block;
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Tracking Lab</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f0f2f5; padding: 20px; display: flex; flex-direction: column; align-items: center; }
+        .container { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 100%; max-width: 500px; text-align: center; }
+        .btn { display: block; width: 100%; padding: 12px; margin: 10px 0; border: none; border-radius: 6px; cursor: pointer; font-size: 16px; font-weight: bold; transition: 0.3s; }
+        .signup { background-color: #007bff; color: white; }
+        .view-cart { background-color: #6c757d; color: white; }
+        .add-cart { background-color: #ffc107; color: black; }
+        .checkout { background-color: #17a2b8; color: white; }
+        .purchase { background-color: #28a745; color: white; }
+        .btn:hover { opacity: 0.8; }
+        .log-box { margin-top: 20px; padding: 10px; background: #222; color: #0f0; font-family: monospace; font-size: 12px; border-radius: 5px; text-align: left; height: 100px; overflow-y: auto; }
+    </style>
 </head>
 <body>
-<!-- Google Tag Manager (noscript) -->
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PND3KKQL"
-height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-<!-- End Google Tag Manager (noscript) -->
-<!-- ===== Navigation ===== -->
-<div class="container">
-    <button onclick="showPage('home')">Home</button>
-    <button onclick="showPage('contact')">Contact</button>
-</div>
+    <div class="container">
+        <h2>🛒 E-commerce Tracking Lab</h2>
+        <p>Click the buttons to fire Data Layer events</p>
 
-<!-- ===== Home Section ===== -->
-<div class="container section active" id="home">
-    <div class="card">
-        <h1>🚀 Welcome to Mehrub's Awesome Site</h1>
-        <p>Practice GTM & GA4 tracking here!</p>
+        <button class="btn signup" onclick="fireSignUp()">1. User Sign Up</button>
+        <button class="btn add-cart" onclick="fireAddToCart()">2. Add to Cart (৳2500)</button>
+        <button class="btn view-cart" onclick="fireViewCart()">3. View Cart</button>
+        <button class="btn checkout" onclick="fireBeginCheckout()">4. Begin Checkout</button>
+        <button class="btn purchase" onclick="firePurchase()">5. Complete Purchase (৳2500)</button>
+
+        <div class="log-box" id="log">Console: Waiting for actions...</div>
     </div>
 
-    <div class="card">
-        <h2>🎯 Button Click Tracker</h2>
-        <button id="clickBtn">Click Me!</button>
-        <p>Total Clicks: <span id="count">0</span></p>
-    </div>
-</div>
+    <script>
+        window.dataLayer = window.dataLayer || [];
 
-<!-- ===== Contact Section ===== -->
-<div class="container section" id="contact">
-    <div class="card">
-        <h1>📬 Lead Form</h1>
-        <p>Submit your info below:</p>
-        <form id="leadForm">
-            <input type="text" id="name" placeholder="Your Name" required><br>
-            <input type="email" id="email" placeholder="Your Email" required><br>
-            <button type="submit">Submit</button>
-        </form>
-        <p id="message"></p>
-    </div>
-</div>
+        function logEvent(msg) {
+            const log = document.getElementById('log');
+            log.innerHTML += "> " + msg + "<br>";
+            log.scrollTop = log.scrollHeight;
+        }
 
-<script>
-// ===== Page Navigation =====
-function showPage(pageId) {
-    document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
-    document.getElementById(pageId).classList.add('active');
-}
+        // 1. Sign Up Event
+        function fireSignUp() {
+            window.dataLayer.push({
+                'event': 'sign_up',
+                'method': 'Google'
+            });
+            logEvent("Event: sign_up fired!");
+        }
 
-// ===== Button Click Tracker =====
-let count = 0;
-document.getElementById("clickBtn").addEventListener("click", function(){
-    count++;
-    document.getElementById("count").innerText = count;
-    console.log("Button clicked");
-});
+        // 2. Add to Cart Event
+        function fireAddToCart() {
+            window.dataLayer.push({
+                'event': 'add_to_cart',
+                'ecommerce': {
+                    'currency': 'BDT',
+                    'value': 2500,
+                    'items': [{
+                        'item_name': 'Smart Watch',
+                        'item_id': 'SW-101',
+                        'price': 2500,
+                        'quantity': 1
+                    }]
+                }
+            });
+            logEvent("Event: add_to_cart fired (৳2500)");
+        }
 
-// ===== Form Submit Tracker =====
-document.getElementById("leadForm").addEventListener("submit", function(e){
-    e.preventDefault();
-    let name = document.getElementById("name").value;
-    let email = document.getElementById("email").value;
-    document.getElementById("message").innerText = "Thanks, " + name + "! We'll contact you at " + email + ".";
-    console.log("Form submitted");
-});
-</script>
+        // 3. View Cart
+        function fireViewCart() {
+            window.dataLayer.push({
+                'event': 'view_cart',
+                'ecommerce': {
+                    'currency': 'BDT',
+                    'value': 2500,
+                    'items': [{ 'item_name': 'Smart Watch', 'price': 2500 }]
+                }
+            });
+            logEvent("Event: view_cart fired!");
+        }
 
+        // 4. Begin Checkout
+        function fireBeginCheckout() {
+            window.dataLayer.push({
+                'event': 'begin_checkout',
+                'ecommerce': {
+                    'currency': 'BDT',
+                    'value': 2500,
+                    'items': [{ 'item_name': 'Smart Watch', 'price': 2500 }]
+                }
+            });
+            logEvent("Event: begin_checkout fired!");
+        }
+
+        // 5. Purchase
+        function firePurchase() {
+            const tID = "TRX-" + Math.floor(Math.random() * 999999);
+            window.dataLayer.push({
+                'event': 'purchase',
+                'ecommerce': {
+                    'transaction_id': tID,
+                    'value': 2500,
+                    'currency': 'BDT',
+                    'items': [{
+                        'item_name': 'Smart Watch',
+                        'item_id': 'SW-101',
+                        'price': 2500,
+                        'quantity': 1
+                    }]
+                }
+            });
+            logEvent("Event: purchase fired! ID: " + tID);
+        }
+    </script>
 </body>
 </html>
