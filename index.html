@@ -1,125 +1,138 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pro Tracking Lab - Full Funnel</title>
-    <style>
-        body { font-family: 'Segoe UI', sans-serif; background-color: #f4f7f6; padding: 20px; color: #333; }
-        .container { max-width: 800px; margin: auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
-        .section { display: none; padding: 20px; border: 1px solid #eee; border-radius: 8px; margin-top: 20px; }
-        .active { display: block; }
-        .product-box { border: 1px solid #ddd; padding: 15px; border-radius: 5px; text-align: center; }
-        .btn { padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; margin-top: 10px; transition: 0.3s; }
-        .btn-add { background: #ffc107; color: black; }
-        .btn-next { background: #007bff; color: white; width: 100%; margin-top: 20px; }
-        .btn-buy { background: #28a745; color: white; width: 100%; }
-        .nav-steps { display: flex; justify-content: space-around; margin-bottom: 20px; font-weight: bold; color: #999; }
-        .nav-steps .active-step { color: #007bff; border-bottom: 2px solid #007bff; }
-        #log-screen { background: #222; color: #0f0; padding: 10px; font-family: monospace; font-size: 12px; margin-top: 20px; height: 80px; overflow-y: auto; border-radius: 5px; }
-    </style>
+  <title>Mini E-commerce</title>
+  <style>
+    body { font-family: Arial; padding: 20px; }
+    .hidden { display: none; }
+    .product { border: 1px solid #ccc; padding: 10px; margin: 10px; }
+    button { margin-top: 5px; }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h2 style="text-align: center;">🚀 Full Funnel Tracking Lab</h2>
-        
-        <div class="nav-steps">
-            <span id="s1" class="active-step">1. Product</span>
-            <span id="s2">2. Cart</span>
-            <span id="s3">3. Checkout</span>
-        </div>
 
-        <div id="step1" class="section active">
-            <div class="product-box">
-                <img src="https://via.placeholder.com/150" alt="Product">
-                <h3>Smartphone X1</h3>
-                <p>Price: ৳25,000</p>
-                <button class="btn btn-add" onclick="addToCart()">Add to Cart</button>
-            </div>
-            <button class="btn btn-next" onclick="showStep(2, 'view_cart')">Go to Cart 🛒</button>
-        </div>
+<h1>🛒 Mini E-commerce</h1>
 
-        <div id="step2" class="section">
-            <h3>Your Shopping Cart</h3>
-            <div style="border-bottom: 1px solid #eee; padding-bottom: 10px;">
-                <p>Smartphone X1 - 1pc - ৳25,000</p>
-            </div>
-            <p><strong>Total: ৳25,000</strong></p>
-            <button class="btn btn-next" onclick="showStep(3, 'begin_checkout')">Proceed to Checkout 💳</button>
-        </div>
+<!-- NAV -->
+<button onclick="showPage('shop')">Shop</button>
+<button onclick="showPage('cart')">Cart</button>
+<button onclick="showPage('signup')">Signup</button>
 
-        <div id="step3" class="section">
-            <h3>Checkout Details</h3>
-            <input type="text" placeholder="Name" style="width:90%; padding:10px; margin-bottom:10px;"><br>
-            <input type="email" id="userEmail" placeholder="Email" style="width:90%; padding:10px; margin-bottom:10px;">
-            <p>Payment Method: Cash on Delivery</p>
-            <button class="btn btn-buy" onclick="completePurchase()">Complete Order (Purchase)</button>
-        </div>
+<hr>
 
-        <div id="log-screen">> System ready. Waiting for user action...</div>
-    </div>
+<!-- SHOP PAGE -->
+<div id="shop">
+  <h2>Products</h2>
 
-    <script>
-        window.dataLayer = window.dataLayer || [];
+  <div class="product">
+    <h3>Product 1</h3>
+    <p>$10</p>
+    <button onclick="addToCart('Product 1',10)">Add to Cart</button>
+  </div>
 
-        function log(msg) {
-            const screen = document.getElementById('log-screen');
-            screen.innerHTML += "<br>> " + msg;
-            screen.scrollTop = screen.scrollHeight;
-        }
+  <div class="product">
+    <h3>Product 2</h3>
+    <p>$20</p>
+    <button onclick="addToCart('Product 2',20)">Add to Cart</button>
+  </div>
+</div>
 
-        // Helper to switch steps
-        function showStep(stepNum, eventName) {
-            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-            document.getElementById('step' + stepNum).classList.add('active');
-            
-            document.querySelectorAll('.nav-steps span').forEach(s => s.classList.remove('active-step'));
-            document.getElementById('s' + stepNum).classList.add('active-step');
+<!-- CART PAGE -->
+<div id="cart" class="hidden">
+  <h2>Your Cart</h2>
+  <ul id="cartItems"></ul>
+  <h3 id="total"></h3>
+  <button onclick="showPage('checkout')">Go to Checkout</button>
+</div>
 
-            // Fire Data Layer Event
-            window.dataLayer.push({
-                'event': eventName,
-                'ecommerce': {
-                    'currency': 'BDT',
-                    'value': 25000,
-                    'items': [{ 'item_name': 'Smartphone X1', 'price': 25000 }]
-                }
-            });
-            log(eventName + " event pushed to Data Layer.");
-        }
+<!-- CHECKOUT PAGE -->
+<div id="checkout" class="hidden">
+  <h2>Checkout</h2>
 
-        function addToCart() {
-            window.dataLayer.push({
-                'event': 'add_to_cart',
-                'ecommerce': {
-                    'currency': 'BDT',
-                    'value': 25000,
-                    'items': [{ 'item_name': 'Smartphone X1', 'item_id': 'SP-X1', 'price': 25000, 'quantity': 1 }]
-                }
-            });
-            log("add_to_cart event pushed.");
-            alert("Added to cart!");
-        }
+  <form onsubmit="checkout(event)">
+    <input type="text" placeholder="Name" required><br><br>
+    <input type="text" placeholder="Address" required><br><br>
+    <button type="submit">Place Order</button>
+  </form>
+</div>
 
-        function completePurchase() {
-            const email = document.getElementById('userEmail').value;
-            const tID = "ORD-" + Math.floor(Math.random() * 100000);
-            
-            window.dataLayer.push({
-                'event': 'purchase',
-                'ecommerce': {
-                    'transaction_id': tID,
-                    'value': 25000,
-                    'currency': 'BDT',
-                    'customer_email': email, // Useful for Enhanced Conversions
-                    'items': [{ 'item_name': 'Smartphone X1', 'item_id': 'SP-X1', 'price': 25000, 'quantity': 1 }]
-                }
-            });
-            
-            log("PURCHASE SUCCESS! ID: " + tID);
-            alert("Order Completed! Transaction ID: " + tID);
-            location.reload(); // Reset for next practice
-        }
-    </script>
+<!-- SIGNUP PAGE -->
+<div id="signup" class="hidden">
+  <h2>Signup</h2>
+
+  <form onsubmit="signup(event)">
+    <input type="email" id="email" placeholder="Email" required><br><br>
+    <input type="password" id="password" placeholder="Password" required><br><br>
+    <button type="submit">Sign Up</button>
+  </form>
+</div>
+
+<script>
+let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+// Show page
+function showPage(page) {
+  document.querySelectorAll("div").forEach(div => div.classList.add("hidden"));
+  document.getElementById(page).classList.remove("hidden");
+
+  if (page === "cart") loadCart();
+}
+
+// Add to cart
+function addToCart(name, price) {
+  cart.push({ name, price });
+  localStorage.setItem("cart", JSON.stringify(cart));
+  alert("Added to cart!");
+}
+
+// Load cart
+function loadCart() {
+  let list = document.getElementById("cartItems");
+  list.innerHTML = "";
+
+  let total = 0;
+
+  cart.forEach((item, index) => {
+    total += item.price;
+
+    let li = document.createElement("li");
+    li.innerHTML = item.name + " - $" + item.price +
+      ` <button onclick="removeItem(${index})">❌</button>`;
+    list.appendChild(li);
+  });
+
+  document.getElementById("total").innerText = "Total: $" + total;
+}
+
+// Remove item
+function removeItem(index) {
+  cart.splice(index, 1);
+  localStorage.setItem("cart", JSON.stringify(cart));
+  loadCart();
+}
+
+// Checkout
+function checkout(e) {
+  e.preventDefault();
+  alert("✅ Order placed!");
+  localStorage.removeItem("cart");
+  cart = [];
+  showPage("shop");
+}
+
+// Signup
+function signup(e) {
+  e.preventDefault();
+
+  let email = document.getElementById("email").value;
+  let password = document.getElementById("password").value;
+
+  localStorage.setItem("user", JSON.stringify({ email, password }));
+
+  alert("Signup successful!");
+  showPage("shop");
+}
+</script>
+
 </body>
 </html>
