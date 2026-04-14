@@ -3,114 +3,122 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Advanced Tracking Lab</title>
+    <title>Pro Tracking Lab - Full Funnel</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f0f2f5; padding: 20px; display: flex; flex-direction: column; align-items: center; }
-        .container { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 100%; max-width: 500px; text-align: center; }
-        .btn { display: block; width: 100%; padding: 12px; margin: 10px 0; border: none; border-radius: 6px; cursor: pointer; font-size: 16px; font-weight: bold; transition: 0.3s; }
-        .signup { background-color: #007bff; color: white; }
-        .view-cart { background-color: #6c757d; color: white; }
-        .add-cart { background-color: #ffc107; color: black; }
-        .checkout { background-color: #17a2b8; color: white; }
-        .purchase { background-color: #28a745; color: white; }
-        .btn:hover { opacity: 0.8; }
-        .log-box { margin-top: 20px; padding: 10px; background: #222; color: #0f0; font-family: monospace; font-size: 12px; border-radius: 5px; text-align: left; height: 100px; overflow-y: auto; }
+        body { font-family: 'Segoe UI', sans-serif; background-color: #f4f7f6; padding: 20px; color: #333; }
+        .container { max-width: 800px; margin: auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        .section { display: none; padding: 20px; border: 1px solid #eee; border-radius: 8px; margin-top: 20px; }
+        .active { display: block; }
+        .product-box { border: 1px solid #ddd; padding: 15px; border-radius: 5px; text-align: center; }
+        .btn { padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; margin-top: 10px; transition: 0.3s; }
+        .btn-add { background: #ffc107; color: black; }
+        .btn-next { background: #007bff; color: white; width: 100%; margin-top: 20px; }
+        .btn-buy { background: #28a745; color: white; width: 100%; }
+        .nav-steps { display: flex; justify-content: space-around; margin-bottom: 20px; font-weight: bold; color: #999; }
+        .nav-steps .active-step { color: #007bff; border-bottom: 2px solid #007bff; }
+        #log-screen { background: #222; color: #0f0; padding: 10px; font-family: monospace; font-size: 12px; margin-top: 20px; height: 80px; overflow-y: auto; border-radius: 5px; }
     </style>
 </head>
 <body>
     <div class="container">
-        <h2>🛒 E-commerce Tracking Lab</h2>
-        <p>Click the buttons to fire Data Layer events</p>
+        <h2 style="text-align: center;">🚀 Full Funnel Tracking Lab</h2>
+        
+        <div class="nav-steps">
+            <span id="s1" class="active-step">1. Product</span>
+            <span id="s2">2. Cart</span>
+            <span id="s3">3. Checkout</span>
+        </div>
 
-        <button class="btn signup" onclick="fireSignUp()">1. User Sign Up</button>
-        <button class="btn add-cart" onclick="fireAddToCart()">2. Add to Cart (৳2500)</button>
-        <button class="btn view-cart" onclick="fireViewCart()">3. View Cart</button>
-        <button class="btn checkout" onclick="fireBeginCheckout()">4. Begin Checkout</button>
-        <button class="btn purchase" onclick="firePurchase()">5. Complete Purchase (৳2500)</button>
+        <div id="step1" class="section active">
+            <div class="product-box">
+                <img src="https://via.placeholder.com/150" alt="Product">
+                <h3>Smartphone X1</h3>
+                <p>Price: ৳25,000</p>
+                <button class="btn btn-add" onclick="addToCart()">Add to Cart</button>
+            </div>
+            <button class="btn btn-next" onclick="showStep(2, 'view_cart')">Go to Cart 🛒</button>
+        </div>
 
-        <div class="log-box" id="log">Console: Waiting for actions...</div>
+        <div id="step2" class="section">
+            <h3>Your Shopping Cart</h3>
+            <div style="border-bottom: 1px solid #eee; padding-bottom: 10px;">
+                <p>Smartphone X1 - 1pc - ৳25,000</p>
+            </div>
+            <p><strong>Total: ৳25,000</strong></p>
+            <button class="btn btn-next" onclick="showStep(3, 'begin_checkout')">Proceed to Checkout 💳</button>
+        </div>
+
+        <div id="step3" class="section">
+            <h3>Checkout Details</h3>
+            <input type="text" placeholder="Name" style="width:90%; padding:10px; margin-bottom:10px;"><br>
+            <input type="email" id="userEmail" placeholder="Email" style="width:90%; padding:10px; margin-bottom:10px;">
+            <p>Payment Method: Cash on Delivery</p>
+            <button class="btn btn-buy" onclick="completePurchase()">Complete Order (Purchase)</button>
+        </div>
+
+        <div id="log-screen">> System ready. Waiting for user action...</div>
     </div>
 
     <script>
         window.dataLayer = window.dataLayer || [];
 
-        function logEvent(msg) {
-            const log = document.getElementById('log');
-            log.innerHTML += "> " + msg + "<br>";
-            log.scrollTop = log.scrollHeight;
+        function log(msg) {
+            const screen = document.getElementById('log-screen');
+            screen.innerHTML += "<br>> " + msg;
+            screen.scrollTop = screen.scrollHeight;
         }
 
-        // 1. Sign Up Event
-        function fireSignUp() {
+        // Helper to switch steps
+        function showStep(stepNum, eventName) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.getElementById('step' + stepNum).classList.add('active');
+            
+            document.querySelectorAll('.nav-steps span').forEach(s => s.classList.remove('active-step'));
+            document.getElementById('s' + stepNum).classList.add('active-step');
+
+            // Fire Data Layer Event
             window.dataLayer.push({
-                'event': 'sign_up',
-                'method': 'Google'
+                'event': eventName,
+                'ecommerce': {
+                    'currency': 'BDT',
+                    'value': 25000,
+                    'items': [{ 'item_name': 'Smartphone X1', 'price': 25000 }]
+                }
             });
-            logEvent("Event: sign_up fired!");
+            log(eventName + " event pushed to Data Layer.");
         }
 
-        // 2. Add to Cart Event
-        function fireAddToCart() {
+        function addToCart() {
             window.dataLayer.push({
                 'event': 'add_to_cart',
                 'ecommerce': {
                     'currency': 'BDT',
-                    'value': 2500,
-                    'items': [{
-                        'item_name': 'Smart Watch',
-                        'item_id': 'SW-101',
-                        'price': 2500,
-                        'quantity': 1
-                    }]
+                    'value': 25000,
+                    'items': [{ 'item_name': 'Smartphone X1', 'item_id': 'SP-X1', 'price': 25000, 'quantity': 1 }]
                 }
             });
-            logEvent("Event: add_to_cart fired (৳2500)");
+            log("add_to_cart event pushed.");
+            alert("Added to cart!");
         }
 
-        // 3. View Cart
-        function fireViewCart() {
-            window.dataLayer.push({
-                'event': 'view_cart',
-                'ecommerce': {
-                    'currency': 'BDT',
-                    'value': 2500,
-                    'items': [{ 'item_name': 'Smart Watch', 'price': 2500 }]
-                }
-            });
-            logEvent("Event: view_cart fired!");
-        }
-
-        // 4. Begin Checkout
-        function fireBeginCheckout() {
-            window.dataLayer.push({
-                'event': 'begin_checkout',
-                'ecommerce': {
-                    'currency': 'BDT',
-                    'value': 2500,
-                    'items': [{ 'item_name': 'Smart Watch', 'price': 2500 }]
-                }
-            });
-            logEvent("Event: begin_checkout fired!");
-        }
-
-        // 5. Purchase
-        function firePurchase() {
-            const tID = "TRX-" + Math.floor(Math.random() * 999999);
+        function completePurchase() {
+            const email = document.getElementById('userEmail').value;
+            const tID = "ORD-" + Math.floor(Math.random() * 100000);
+            
             window.dataLayer.push({
                 'event': 'purchase',
                 'ecommerce': {
                     'transaction_id': tID,
-                    'value': 2500,
+                    'value': 25000,
                     'currency': 'BDT',
-                    'items': [{
-                        'item_name': 'Smart Watch',
-                        'item_id': 'SW-101',
-                        'price': 2500,
-                        'quantity': 1
-                    }]
+                    'customer_email': email, // Useful for Enhanced Conversions
+                    'items': [{ 'item_name': 'Smartphone X1', 'item_id': 'SP-X1', 'price': 25000, 'quantity': 1 }]
                 }
             });
-            logEvent("Event: purchase fired! ID: " + tID);
+            
+            log("PURCHASE SUCCESS! ID: " + tID);
+            alert("Order Completed! Transaction ID: " + tID);
+            location.reload(); // Reset for next practice
         }
     </script>
 </body>
