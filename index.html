@@ -9,47 +9,15 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 })(window,document,'script','dataLayer','GTM-PND3KKQL');</script>
 <!-- End Google Tag Manager -->
 <meta charset="UTF-8">
-<title>Event Tracking Practice</title>
+<title>Advanced Tracking Practice</title>
 
 <style>
-body {
-  font-family: Arial;
-  margin: 0;
-  padding: 0;
-}
-
-header {
-  background: #222;
-  color: white;
-  padding: 15px;
-}
-
-nav a {
-  margin-right: 10px;
-  color: white;
-  cursor: pointer;
-}
-
-.section {
-  padding: 40px;
-  border-bottom: 1px solid #ccc;
-}
-
-button {
-  padding: 10px;
-  margin: 5px;
-}
-
-.big-box {
-  height: 800px;
-  background: lightgray;
-}
-
-.hidden-box {
-  margin-top: 200px;
-  padding: 20px;
-  background: orange;
-}
+body { font-family: Arial; margin: 0; }
+header { background:#222; color:#fff; padding:15px; }
+.section { padding:40px; border-bottom:1px solid #ccc; }
+button { margin:5px; padding:10px; }
+.big { height:800px; background:#eee; }
+.hidden { margin-top:200px; padding:20px; background:orange; }
 </style>
 </head>
 
@@ -60,20 +28,22 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
 
 <header>
-  <h2>Tracking Practice Website</h2>
-  <nav>
-    <a onclick="navClick()">Home</a>
-    <a onclick="navClick()">About</a>
-    <a onclick="navClick()">Contact</a>
-  </nav>
+  <h2>Advanced Tracking Practice</h2>
 </header>
 
 <div class="section">
+  <h3>Navigation</h3>
+  <button onclick="track('navigation_click')">Home</button>
+  <button onclick="track('navigation_click')">About</button>
+</div>
+
+<div class="section">
   <h3>Buttons</h3>
-  <button onclick="buttonClick()">Click Me</button>
-  <button onclick="phoneClick()">Call</button>
-  <button onclick="emailClick()">Email</button>
-  <button onclick="whatsappClick()">WhatsApp</button>
+  <button onclick="track('button_click')">CTA Button</button>
+  <button onclick="track('contact_click')">Contact</button>
+  <button onclick="track('phone_click')">Call</button>
+  <button onclick="track('email_click')">Email</button>
+  <button onclick="track('whatsapp_click')">WhatsApp</button>
 </div>
 
 <div class="section">
@@ -86,183 +56,120 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </div>
 
 <div class="section">
-  <h3>Search</h3>
-  <input type="text" placeholder="Search..." oninput="searchEvent()">
+  <h3>Auth</h3>
+  <button onclick="track('login')">Login</button>
+  <button onclick="track('sign_up')">Sign Up</button>
 </div>
 
 <div class="section">
-  <h3>Download</h3>
-  <a href="#" onclick="downloadFile()">Download PDF</a>
+  <h3>Search</h3>
+  <input type="text" placeholder="Search..." onfocus="track('form_start')" oninput="track('site_search')">
+</div>
+
+<div class="section">
+  <h3>Download + Outbound</h3>
+  <a href="#" onclick="track('file_download')">Download</a><br><br>
+  <a href="https://google.com" target="_blank" onclick="track('outbound_click')">External Link</a>
 </div>
 
 <div class="section">
   <h3>Video</h3>
-  <video width="320" controls id="video">
+  <video id="video" width="320" controls>
     <source src="https://www.w3schools.com/html/mov_bbb.mp4">
   </video>
 </div>
 
 <div class="section">
-  <h3>Accordion</h3>
-  <button onclick="accordionClick()">Open Accordion</button>
+  <h3>UI Interactions</h3>
+  <button onclick="track('accordion_click')">Accordion</button>
+  <button onclick="track('tab_click')">Tab</button>
+  <button onclick="track('menu_click')">Menu</button>
+  <button onclick="track('filter_apply')">Filter</button>
+  <button onclick="track('sort_click')">Sort</button>
 </div>
 
 <div class="section">
-  <h3>Tabs</h3>
-  <button onclick="tabClick()">Tab 1</button>
-  <button onclick="tabClick()">Tab 2</button>
+  <h3>Engagement</h3>
+  <button onclick="track('add_to_favorites')">Favorite</button>
+  <button onclick="track('share')">Share</button>
 </div>
 
 <div class="section">
-  <h3>Menu / Filter / Sort</h3>
-  <button onclick="menuClick()">Menu</button>
-  <button onclick="filterApply()">Filter</button>
-  <button onclick="sortClick()">Sort</button>
+  <h3>Map</h3>
+  <div onclick="track('map_click')" style="height:200px;background:lightblue;">Map</div>
 </div>
 
-<div class="section">
-  <h3>Favorites / Share</h3>
-  <button onclick="fav()">Add to Favorites</button>
-  <button onclick="share()">Share</button>
-</div>
+<div class="big"></div>
 
-<div class="section">
-  <h3>Map Click</h3>
-  <div onclick="mapClick()" style="background:lightblue;height:200px;">Map Area</div>
-</div>
-
-<div class="section big-box">
-  <h3>Scroll Area</h3>
-</div>
-
-<div class="section hidden-box" id="visibleBox">
-  <h3>Element Visibility</h3>
+<div class="section hidden" id="visibleBox">
+  Element Visibility
 </div>
 
 <script>
-// DataLayer
 window.dataLayer = window.dataLayer || [];
 
-// Basic Events
-dataLayer.push({ event: "page_view" });
-
-function buttonClick() {
-  dataLayer.push({ event: "button_click" });
+// universal tracker
+function track(name){
+  dataLayer.push({ event: name });
 }
 
-function navClick() {
-  dataLayer.push({ event: "navigation_click" });
-}
+// page view
+track("page_view");
 
-function phoneClick() {
-  dataLayer.push({ event: "phone_click" });
-}
+// form events
+const form = document.getElementById("form");
 
-function emailClick() {
-  dataLayer.push({ event: "email_click" });
-}
+form.addEventListener("focusin", () => track("form_start"));
 
-function whatsappClick() {
-  dataLayer.push({ event: "whatsapp_click" });
-}
-
-// Form
-document.getElementById("form").addEventListener("submit", function() {
-  dataLayer.push({ event: "form_submit" });
+form.addEventListener("submit", () => {
+  track("form_submit");
+  track("generate_lead");
 });
 
-// Search
-function searchEvent() {
-  dataLayer.push({ event: "search" });
-}
-
-// Download
-function downloadFile() {
-  dataLayer.push({ event: "file_download" });
-}
-
-// Accordion / Tabs
-function accordionClick() {
-  dataLayer.push({ event: "accordion_click" });
-}
-
-function tabClick() {
-  dataLayer.push({ event: "tab_click" });
-}
-
-// Menu / Filter / Sort
-function menuClick() {
-  dataLayer.push({ event: "menu_click" });
-}
-
-function filterApply() {
-  dataLayer.push({ event: "filter_apply" });
-}
-
-function sortClick() {
-  dataLayer.push({ event: "sort_click" });
-}
-
-// Favorites / Share
-function fav() {
-  dataLayer.push({ event: "add_to_favorites" });
-}
-
-function share() {
-  dataLayer.push({ event: "share" });
-}
-
-// Map
-function mapClick() {
-  dataLayer.push({ event: "map_click" });
-}
-
-// Scroll Tracking
-window.addEventListener("scroll", () => {
-  let scrollPercent = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
-
-  if (scrollPercent > 25) dataLayer.push({ event: "scroll_25" });
-  if (scrollPercent > 50) dataLayer.push({ event: "scroll_50" });
-  if (scrollPercent > 75) dataLayer.push({ event: "scroll_75" });
-  if (scrollPercent > 100) dataLayer.push({ event: "scroll_100" });
-});
-
-// Element Visibility
-const observer = new IntersectionObserver(entries => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      dataLayer.push({ event: "element_visibility" });
-    }
-  });
-});
-observer.observe(document.getElementById("visibleBox"));
-
-// Video Tracking
+// video
 const video = document.getElementById("video");
 
-video.addEventListener("play", () => {
-  dataLayer.push({ event: "video_start" });
-});
+video.addEventListener("play", () => track("video_start"));
 
 video.addEventListener("timeupdate", () => {
-  if (video.currentTime > video.duration * 0.5) {
-    dataLayer.push({ event: "video_progress" });
+  if(video.currentTime > video.duration*0.5){
+    track("video_progress");
   }
 });
 
-video.addEventListener("ended", () => {
-  dataLayer.push({ event: "video_complete" });
+video.addEventListener("ended", () => track("video_complete"));
+
+// scroll
+let fired = {};
+window.addEventListener("scroll", () => {
+  let p = (window.scrollY/(document.body.scrollHeight-window.innerHeight))*100;
+
+  if(p>25 && !fired[25]){ track("scroll_depth_25"); fired[25]=true; }
+  if(p>50 && !fired[50]){ track("scroll_depth_50"); fired[50]=true; }
+  if(p>75 && !fired[75]){ track("scroll_depth_75"); fired[75]=true; }
+  if(p>95 && !fired[100]){ track("scroll_depth_100"); fired[100]=true; }
 });
 
-// Copy Text
-document.addEventListener("copy", () => {
-  dataLayer.push({ event: "copy_text" });
-});
+// element visibility
+new IntersectionObserver(e=>{
+  e.forEach(x=>{
+    if(x.isIntersecting) track("element_visibility");
+  });
+}).observe(document.getElementById("visibleBox"));
 
-// Error Event
-window.addEventListener("error", () => {
-  dataLayer.push({ event: "error_event" });
-});
+// copy
+document.addEventListener("copy", ()=>track("copy_text"));
+
+// time on page
+setTimeout(()=>track("time_on_page"), 10000);
+
+// error
+window.addEventListener("error", ()=>track("error_event"));
+
+// fake 404 trigger (for practice)
+if(location.hash === "#404"){
+  track("page_not_found");
+}
 </script>
 
 </body>
